@@ -1529,7 +1529,7 @@
       if (savedUrl && !SUPABASE_URL) SUPABASE_URL = savedUrl;
       if (savedKey && !SUPABASE_ANON_KEY) SUPABASE_ANON_KEY = savedKey;
       if (savedTable) {
-        if (savedTable === "call_reports") {
+        if (savedTable === "call_reports" || savedTable === "qa_calls") {
           TABLE = "pipeline_jobs";
           try { localStorage.setItem("qa_supabase_table", "pipeline_jobs"); } catch (e) { }
         } else {
@@ -1677,7 +1677,7 @@
       <div class="form-grp">
         <label>Primary Reports Table</label>
         <input type="text" id="cfgTable" placeholder="pipeline_jobs" />
-        <div class="hint">Table storing call evaluations (e.g. call_reports or qa_calls)</div>
+        <div class="hint">Table storing call evaluations (e.g. pipeline_jobs or qa_calls)</div>
       </div>
       <div class="modal-foot">
         <button class="btn btn-ghost" onclick="closeDbModal()">Cancel</button>
@@ -1853,9 +1853,9 @@
           try { const p = JSON.parse(s); return Array.isArray(p) ? p : [p]; } catch (e) { return []; }
         };
 
-        // 1. Fetch Primary Calls Table (Tries qa_calls first, then fallback to call_reports)
+        // 1. Fetch Primary Calls Table (Tries pipeline_jobs first, then fallback to qa_calls / call_reports)
         let callsData = null;
-        const tablesToTry = [...new Set([TABLE, "qa_calls", "call_reports"].filter(Boolean))];
+        const tablesToTry = [...new Set([TABLE, "pipeline_jobs", "qa_calls", "call_reports"].filter(Boolean))];
         let lastError = null;
 
         for (const tbl of tablesToTry) {
